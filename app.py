@@ -1,72 +1,71 @@
-from flask import Flask, render_template, url_for,redirect
+from flask import Flask, render_template, url_for, redirect, request, session
 
 app = Flask(__name__)
-app.config["SECRET_KEY"]="faljfaljfal;"
+app.config["SECRET_KEY"] = "iniSecretKeyKu2019"
 
-# @app.route("/")
-# def indexing():
-#     huruf = ['a','b','c','d','e','f']
-#     suasana = "turu"
-#     return render_template("index.html",value = huruf, suasana = suasana)
 
-# @app.route("/about")
-# def abouting():
-#     return render_template("about.html")
+@app.route("/", methods=["POST", "GET"])
+def index():
+    if "email" in session:
+        return redirect(url_for('sukses_req'))
+    
+    if request.method == "POST":
+        email = request.form['email']
+        password = request.form['password']
+        print("email : ", email)
+        print("pass : " , password)
+        if email == 'admin@gmail.com' and password == 'pass':
+            session['email'] = email
+            session['password'] = password
 
-# @app.route("/contact")
-# def kontak():
-#     return render_template("contact.html")
+            return redirect(url_for('sukses_req'))
 
-# # parsing nilai string atau int
-# @app.route("/parsing/<int:nilaiku>")
-# def parsing(nilaiku):
-#     return "nilainya adalah : {}".format(nilaiku)
-# # parsing nilai argument
-# @app.route("/parsingar")
-# def argue():
-#     data = request.args.get("nilai")
-#     return "nilai dari parsing argument {}".format(data)
-
-# # session
-
-# @app.route("/halaman/<int:nilai>")
-# def session_1(nilai):
-#     session["nilaiku"] = nilai
-#     return "data berhasil di set"
-
-# @app.route("/halaman/lihat")
-# def view_session():
-#     try:
-#         data = session["nilaiku"]
-#         return "nilai yang diset adalah {}".format(data)
-#     except:
-#         return "tidak ada nilai yang diset"
-
-# @app.route("/halaman/logout")
-# def logout_session():
-#     session.pop("nilaiku")
-#     return "nilai berhasil dihapus"
-
-@app.route("/")
-def myindex():
+        else:
+            return redirect(url_for('index'))
+    
     return render_template("index.html")
+    
+
+
+@app.route("/sukses")
+def sukses_req():
+    nilai = "Anda sukses login !"
+    return render_template("sukses.html", nilai=nilai)
 
 @app.route("/about")
-def myabout():
-    return render_template("about.html")
+def about():
+    if "email" in session:
+        return render_template("about.html")
+    else:
+        return redirect(url_for('index'))
+
 
 @app.route("/contact")
-def mykontak():
-    return render_template("contact.html")
+def contact():
+    if "email" in session:
+        return render_template("contact.html")
+    else :
+        return redirect(url_for('index'))
+
+
+@app.route("/logout")
+def logout_akun():
+    if "email" in session:
+        session.pop("email")
+        session.pop("password")
+        return redirect(url_for('index'))
+    else:    
+        return redirect(url_for('index'))
 
 @app.route("/redirect-about")
 def ayo_redirect_about():
-    return redirect(url_for('myabout'))
+    return redirect(url_for("about"))
+
+
 @app.route("/redirect-contact")
 def ayo_redirect_contact():
-    return redirect(url_for('mykontak'))
-@app.route("/redirect-index")
-def ayo_redirect_index():
-    return redirect(url_for('myindex'))
+    return redirect(url_for("contact"))
+
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=5001)
