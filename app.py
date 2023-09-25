@@ -1,7 +1,7 @@
 from flask import Flask, render_template, url_for, redirect, request, session
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "iniSecretKeyKu2019"
+app.config["SECRET_KEY"] = "secret"
 
 
 @app.route("/", methods=["POST", "GET"])
