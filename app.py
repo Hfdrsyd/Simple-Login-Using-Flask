@@ -33,7 +33,7 @@ def sukses_req():
     return render_template("sukses.html", nilai=nilai)
 
 @app.route("/about")
-def about():
+def myabout():
     if "email" in session:
         return render_template("about.html")
     else:
@@ -41,7 +41,7 @@ def about():
 
 
 @app.route("/contact")
-def contact():
+def mycontact():
     if "email" in session:
         return render_template("contact.html")
     else :
@@ -49,7 +49,7 @@ def contact():
 
 
 @app.route("/logout")
-def logout_akun():
+def mylogout_akun():
     if "email" in session:
         session.pop("email")
         session.pop("password")
